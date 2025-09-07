@@ -1,5 +1,27 @@
-# GitHubActionsTraining
-Training on GitHub Actions helps teams automate workflows for CI, CD, admin tasks, and project management. Includes presentations, demos, labs, and Q&amp;A with experts. Teams will learn syntax, secrets, runners, custom actions, and best practices to build and manage workflows effectively.
+To clone a Git repository into a specific folder use below commands
+1) cd /path/to/your/desired/parent/directory
+2) git clone <repository-url> <folder-name>
+--------------------------------------------------------------------------------------------
+Create ".gitignore" file and staging the changes
+1) touch .gitignore
+2) git status
+3) git add <file name>
+4) git commit -m "Write your Commit Message"
+5) git push
+----------------------------------------------------------------------------------------------
+Commands For Editing the Global Information Of The User
+1) Your Configuration File : git config --global --edit 
+2) Once you run the above command one "Editor" Will open, Then Press "I" button from your keyboard for initializing the insert mode
+3) After doing your changes press "Esc" Escape Button on keyboard & then press ":" Button on keyboard
+4) To type a colon (:) on a standard QWERTY keyboard, you must press and hold the Shift key while simultaneously pressing the key that also contains the semicolon (;) symbol, which is typically located to the right of the "L" key
+5) Type "wq" once you see the colon & press enter to save the changes -> Example = {:wq} 
+6) If you don't want to save the changes then to discard them press ":q" for quit the session
+----------------------------------------------------------------------------------------------
+Command for Adding remote Git Repository
+1) git remote add origin <REMOTE_URL> -> Example: git remote add origin https://github.com/OWNER/REPOSITORY.git
+2) branch -M main
+3) push -u origin main
+--------------------------------------------------------------------------------------------------
 Here’s a clean, step-by-step playbook to fix “can’t push/commit to GitHub” when the cause is SSH. Follow it in order—stop as soon as your push works.
 
 # 0) Quick checks (often the fix)
@@ -196,40 +218,38 @@ If you paste any exact error you see, I’ll map it to the fastest fix.
 [11]: https://labex.io/tutorials/git-git-remote-url-understanding-and-managing-remote-repositories-391534?utm_source=chatgpt.com "Git Remote URL: Understanding and Managing ..."
 [12]: https://docs.github.com/en/authentication/connecting-to-github-with-ssh?utm_source=chatgpt.com "Connecting to GitHub with SSH"
 [13]: https://docs.github.com/en/authentication/troubleshooting-ssh?utm_source=chatgpt.com "Troubleshooting SSH"
----------------------------------------------------------------------------------------------------------------------
-**concise YAML step-by-step guide with examples + documentation links** 
----
-# YAML Basics for Developers
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# YAML — short step-by-step guide for developers (with examples)
 
-### 1. What is YAML?
+1. **What & file name**
+   YAML = human-friendly data serialization. Files use `.yaml` or `.yml`.
 
-* **YAML** = *YAML Ain’t Markup Language*.
-* Human-friendly way to represent structured data.
-* Commonly used in **config files** (Docker, GitHub Actions, Kubernetes, Ansible).
-* File extensions: `.yaml` or `.yml`.
----
+2. **Basic rules**
 
-### 2. Core Concepts
+* Indent with **spaces** (2 is common). **Never use tabs**.
+* Use `#` for comments.
+* Case-sensitive keys.
 
-#### Scalars (values)
+3. **Scalars (values)**
 
 ```yaml
 name: "Alice"     # string
 age: 30           # integer
-price: 19.99      # float
+price: 19.95      # float
 active: true      # boolean
-nothing: null     # null
+empty: null       # null (or ~)
+code: "0123"      # quote to keep leading zeros
 ```
 
-#### Mappings (key–value / objects)
+4. **Mappings (objects)**
 
 ```yaml
 person:
   name: Alice
-  role: Developer
+  role: developer
 ```
 
-#### Sequences (lists)
+5. **Sequences (lists)**
 
 ```yaml
 servers:
@@ -237,7 +257,7 @@ servers:
   - app2.example.com
 ```
 
-#### Nested structures
+6. **Nesting (combine maps & lists)**
 
 ```yaml
 app:
@@ -247,14 +267,17 @@ app:
       value: db.internal
 ```
 
-#### Inline / flow style
+7. **Flow (inline) style**
 
 ```yaml
 colors: [red, green, blue]
 user: {name: Bob, active: true}
 ```
 
-#### Multiline strings
+8. **Multiline strings**
+
+* Literal `|` preserves newlines.
+* Folded `>` joins lines into one paragraph.
 
 ```yaml
 literal: |
@@ -262,11 +285,11 @@ literal: |
   Line2
 
 folded: >
-  This will be
-  one line
+  This will be one line
+  when parsed.
 ```
 
-#### Anchors, aliases & merge
+9. **Anchors, aliases & merge (reuse blocks)**
 
 ```yaml
 defaults: &defaults
@@ -278,11 +301,21 @@ service:
   name: api
 ```
 
----
+10. **Type tags (force type)**
 
-### 3. Real-world Examples
+```yaml
+age: !!str 30    # force string "30"
+```
 
-**Docker Compose**
+11. **Common gotchas**
+
+* YAML auto-parses `yes/no`, `on/off`, and dates — **quote** ambiguous values.
+* Avoid duplicate keys.
+* Validate with linters before deploying.
+
+12. **Where YAML is used (short examples)**
+
+* **Docker Compose**
 
 ```yaml
 version: "3.8"
@@ -292,7 +325,7 @@ services:
     ports: ["80:80"]
 ```
 
-**GitHub Actions**
+* **GitHub Actions**
 
 ```yaml
 name: CI
@@ -302,16 +335,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Build successful"
+      - run: echo "build"
 ```
 
-**Kubernetes**
+* **Kubernetes**
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: web
+metadata: { name: web }
 spec:
   replicas: 2
   template:
@@ -321,35 +353,45 @@ spec:
           image: nginx:alpine
 ```
 
-**Ansible Playbook**
+* **Ansible (playbook)**
 
 ```yaml
 - hosts: web
   tasks:
-    - name: Install nginx
+    - name: install nginx
       apt:
         name: nginx
         state: present
 ```
 
----
+13. **Best practices**
 
-### 4. Best Practices
-
-* Use **2 spaces** indentation (no tabs).
-* Quote values with leading zeros, booleans (`"yes"`, `"on"`) to avoid misinterpretation.
-* Keep configuration modular (multiple `.yaml` files when large).
-* Validate with tools like **yamllint** or **yq**.
+* Use consistent indentation (2 spaces).
+* Quote values when in doubt.
+* Keep root `README` documenting keys and expected types.
+* Validate with `yamllint`/`yq`/CI checks.
 
 ---
 
-### 5. Documentation & References
+### Minimal all-in-one example
 
-* 🔹 [YAML Official Spec](https://yaml.org/spec/)
-* 🔹 [YAML Tutorial – yaml.org](https://yaml.org/start.html)
-* 🔹 [Learn YAML in Y Minutes](https://learnxinyminutes.com/docs/yaml/)
-* 🔹 [GitHub Actions Workflow syntax](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions)
-* 🔹 [Docker Compose file reference](https://docs.docker.com/compose/compose-file/)
-* 🔹 [Kubernetes YAML basics](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
-* 🔹 [Ansible Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
----
+```yaml
+app: payments
+version: "1.0"
+maintainers:
+  - name: Alice
+    email: alice@example.com
+settings: &defaults
+  timeout: 30
+  retries: 2
+
+services:
+  - name: api
+    <<: *defaults
+    env:
+      - name: DB_URL
+        value: "postgres://db:5432/pay"
+description: |
+  Payment service
+  Handles transactions and webhooks.
+```
