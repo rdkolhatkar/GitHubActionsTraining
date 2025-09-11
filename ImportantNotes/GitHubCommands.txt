@@ -16,6 +16,10 @@ Commands For Editing the Global Information Of The User
 4) To type a colon (:) on a standard QWERTY keyboard, you must press and hold the Shift key while simultaneously pressing the key that also contains the semicolon (;) symbol, which is typically located to the right of the "L" key
 5) Type "wq" once you see the colon & press enter to save the changes -> Example = {:wq} 
 6) If you don't want to save the changes then to discard them press ":q" for quit the session
+7) git config --global user.email -> Check your GitHub Configuration user name
+8) git config --global user.name -> Check your registered email
+9) git config --global user.email "ratnakarkolhatkar@gmail.com"
+10) git config --global user.name "Ratnakar"
 ----------------------------------------------------------------------------------------------
 Command for Adding remote Git Repository
 1) git remote add origin <REMOTE_URL> -> Example: git remote add origin https://github.com/OWNER/REPOSITORY.git
