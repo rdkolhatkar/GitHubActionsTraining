@@ -1,0 +1,43 @@
+A GitHub Workflow is an automated process defined in a repository using YAML files inside the .github/workflows/ folder.
+It is part of GitHub Actions and helps automate tasks like building, testing, and deploying code.
+A workflow is triggered by events (e.g., push, pull_request, or schedule) and consists of one or more jobs, which are groups of steps.
+Steps can run shell commands or use reusable actions. Jobs run on runners (machines provided by GitHub or self-hosted).
+------------------------------------------------------------------------------------------------------------------------------------------------
+Install GitHub Actions Extension for VS Code
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Commands for GitHub Workflow
+1) mkdir .github
+2) cd .github
+3) mkdir workflows
+4) cd workflows
+5) touch 01-building-blocks.yaml
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+🔹 Mandatory Components of GitHub Workflow YAML File
+
+1) name (optional but recommended) -> A human-readable name for the workflow.
+
+name: CI Pipeline
+
+on (REQUIRED) -> Defines the event that triggers the workflow (e.g., push, pull_request, schedule, workflow_dispatch).
+
+on: push
+
+jobs (REQUIRED) -> Defines one or more jobs that will run in the workflow.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest   # REQUIRED for each job → defines the runner
+    steps:                   # REQUIRED inside each job
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+Inside jobs:
+
+runs-on (REQUIRED) → specifies the runner (e.g., ubuntu-latest, windows-latest).
+
+steps (REQUIRED) → list of tasks to execute. Each step should have:
+
+uses: → to run an action, OR
+
+run: → to run a shell command.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
