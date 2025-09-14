@@ -41,3 +41,152 @@ uses: → to run an action, OR
 
 run: → to run a shell command.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+GitHub **workflow events** are the **triggers** that tell GitHub Actions when to run a workflow. A workflow is defined in a `.yml` file under `.github/workflows/`, and each workflow starts only when one or more **events** happen in a repository.
+
+---
+
+## 🔑 Types of GitHub Workflow Events
+
+1. **Repository Events (Code-related)**
+   Triggered when something happens in the repository (like commits, PRs, tags).
+
+   * **push** → Runs when code is pushed to a branch.
+
+     ```yaml
+     on:
+       push:
+         branches:
+           - main
+     ```
+
+     ✅ Example: Run tests when someone pushes code to the `main` branch.
+
+   * **pull\_request** → Runs when a pull request is opened, synchronized, or merged.
+
+     ```yaml
+     on:
+       pull_request:
+         branches:
+           - develop
+     ```
+
+     ✅ Example: Run CI build when a PR targets the `develop` branch.
+
+   * **release** → Runs when a release is created, edited, or published.
+
+     ```yaml
+     on:
+       release:
+         types: [published]
+     ```
+
+     ✅ Example: Deploy app automatically when a release is published.
+
+---
+
+2. **Schedule Events (Time-based)**
+   Triggered automatically based on cron expressions (UTC time).
+
+   ```yaml
+   on:
+     schedule:
+       - cron: "0 2 * * *"   # Every day at 2 AM UTC
+   ```
+
+   ✅ Example: Run nightly builds or clean-up jobs.
+
+---
+
+3. **Manual Events (User-triggered)**
+
+   * **workflow\_dispatch** → Run manually from GitHub UI with optional inputs.
+
+     ```yaml
+     on:
+       workflow_dispatch:
+         inputs:
+           environment:
+             description: "Deploy environment"
+             required: true
+             default: "staging"
+     ```
+
+     ✅ Example: A developer clicks **Run Workflow** in GitHub Actions and chooses whether to deploy to `staging` or `production`.
+
+---
+
+4. **External Events (Other Systems / APIs)**
+
+   * **repository\_dispatch** → Triggered via API call from an external system.
+
+     ```yaml
+     on:
+       repository_dispatch:
+         types: [custom-event]
+     ```
+
+     ✅ Example: Trigger build from an external CI/CD tool.
+
+---
+
+5. **Other Useful Events**
+
+   * **issues** → Runs when issues are opened, closed, labeled, etc.
+
+     ```yaml
+     on:
+       issues:
+         types: [opened]
+     ```
+
+     ✅ Example: Post a welcome comment when a new issue is created.
+
+   * **workflow\_run** → Trigger a workflow after another workflow finishes.
+
+     ```yaml
+     on:
+       workflow_run:
+         workflows: ["CI Tests"]
+         types:
+           - completed
+     ```
+
+     ✅ Example: Run deployment workflow only after tests workflow passes.
+
+---
+
+## 📌 Summary Example
+
+Here’s a workflow that triggers on multiple events:
+
+```yaml
+name: Example Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 1"  # Every Monday 3 AM UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        run: echo "Running tests..."
+```
+
+🔹 This workflow runs when:
+
+* Code is pushed to `main`.
+* A PR targets `main`.
+* Every Monday at 3 AM.
+* Or when manually triggered.
+
+---
