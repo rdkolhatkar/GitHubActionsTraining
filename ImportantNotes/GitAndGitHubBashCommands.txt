@@ -1,0 +1,207 @@
+---
+
+# 🚀 Git & GitHub Commands for Advanced Developers
+
+---
+
+## 🔹 1. Setup & Configuration
+
+| Command                                                   | Explanation                                                                               |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `git config --global user.name "Your Name"`               | Sets your global Git username.                                                            |
+| `git config --global user.email "your.email@example.com"` | Sets your global Git email (used for commits).                                            |
+| `git config --list`                                       | Lists all Git configs currently active.                                                   |
+| `git config --global alias.co checkout`                   | Create aliases (`git co` = `git checkout`). Advanced devs often define aliases for speed. |
+| `git config --global core.editor "code --wait"`           | Sets VS Code as Git’s default editor.                                                     |
+
+---
+
+## 🔹 2. Repository Lifecycle
+
+| Command                               | Explanation                                  |
+| ------------------------------------- | -------------------------------------------- |
+| `git init`                            | Initialize a new Git repo in current folder. |
+| `git clone <url>`                     | Clone remote repo (HTTPS or SSH).            |
+| `git remote -v`                       | Shows remotes (origin/upstream).             |
+| `git remote add upstream <url>`       | Add upstream repo (important for forks).     |
+| `git remote set-url origin <new-url>` | Change remote URL.                           |
+
+---
+
+## 🔹 3. Staging & Committing
+
+| Command                   | Explanation                                         |
+| ------------------------- | --------------------------------------------------- |
+| `git add <file>`          | Stage file for commit.                              |
+| `git add -p`              | Interactive staging (stage only parts of changes).  |
+| `git commit -m "message"` | Commit staged changes.                              |
+| `git commit --amend`      | Modify the last commit (message or content).        |
+| `git commit -a -m "msg"`  | Commit all tracked files directly (skip `git add`). |
+| `git reset HEAD <file>`   | Unstage file.                                       |
+
+---
+
+## 🔹 4. Branching & Merging
+
+| Command                       | Explanation                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| `git branch`                  | List branches.                                             |
+| `git branch -d feature-x`     | Delete local branch safely (if merged).                    |
+| `git branch -D feature-x`     | Force delete branch.                                       |
+| `git checkout <branch>`       | Switch to branch.                                          |
+| `git switch -c feature-x`     | Create and switch to new branch.                           |
+| `git merge <branch>`          | Merge branch into current.                                 |
+| `git merge --no-ff feature-x` | Always create merge commit (preserves history).            |
+| `git rebase <branch>`         | Reapply commits on top of another branch (linear history). |
+| `git rebase -i HEAD~5`        | Interactive rebase (squash, reorder, edit commits).        |
+| `git cherry-pick <commit>`    | Apply specific commit to current branch.                   |
+| `git cherry-pick -n <commit>` | Apply commit but don’t commit (staged only).               |
+
+---
+
+## 🔹 5. Stashing (Work in Progress)
+
+| Command                          | Explanation                                   |
+| -------------------------------- | --------------------------------------------- |
+| `git stash`                      | Save uncommitted changes.                     |
+| `git stash list`                 | Show stashes.                                 |
+| `git stash pop`                  | Reapply last stash + remove from list.        |
+| `git stash apply stash@{2}`      | Apply a specific stash (keeps stash in list). |
+| `git stash branch <branch-name>` | Create a new branch from a stash.             |
+
+---
+
+## 🔹 6. Viewing History & Logs
+
+| Command                                      | Explanation                                |
+| -------------------------------------------- | ------------------------------------------ |
+| `git log`                                    | Commit history.                            |
+| `git log --oneline --graph --decorate --all` | Visualize branch history graph.            |
+| `git log -p -2`                              | Show last 2 commits with diffs.            |
+| `git show <commit>`                          | Show details of a commit.                  |
+| `git blame <file>`                           | Show who last modified each line.          |
+| `git shortlog -sne`                          | Show contributors summary.                 |
+| `git reflog`                                 | Show all branch HEAD history (safety net). |
+
+---
+
+## 🔹 7. Working with Remotes (GitHub / GitLab)
+
+| Command                        | Explanation                                             |
+| ------------------------------ | ------------------------------------------------------- |
+| `git fetch`                    | Fetch updates (no merge).                               |
+| `git pull`                     | Fetch + merge.                                          |
+| `git pull --rebase`            | Fetch + rebase (preferred for linear history).          |
+| `git push origin main`         | Push local main → remote main.                          |
+| `git push -u origin feature-x` | Push branch & set upstream tracking.                    |
+| `git push --force-with-lease`  | Safely overwrite remote history (safer than `--force`). |
+| `git fetch --prune`            | Clean up deleted remote branches locally.               |
+
+---
+
+## 🔹 8. Advanced Reset & Clean
+
+| Command                    | Explanation                             |
+| -------------------------- | --------------------------------------- |
+| `git reset --soft HEAD~1`  | Undo last commit (keep changes staged). |
+| `git reset --mixed HEAD~1` | Undo commit (keep changes unstaged).    |
+| `git reset --hard HEAD~1`  | Undo commit & discard changes.          |
+| `git clean -fd`            | Remove untracked files & dirs.          |
+| `git checkout -- <file>`   | Discard local changes to a file.        |
+
+---
+
+## 🔹 9. Tags & Releases
+
+| Command                                | Explanation                   |
+| -------------------------------------- | ----------------------------- |
+| `git tag v1.0.0`                       | Create lightweight tag.       |
+| `git tag -a v1.0.0 -m "Release 1.0.0"` | Annotated tag (with message). |
+| `git push origin v1.0.0`               | Push tag.                     |
+| `git push origin --tags`               | Push all tags.                |
+| `git tag -d v1.0.0`                    | Delete local tag.             |
+| `git push origin :refs/tags/v1.0.0`    | Delete remote tag.            |
+
+---
+
+## 🔹 10. GitHub-Specific (CLI)
+
+If you install the [GitHub CLI (`gh`)](https://cli.github.com/):
+
+| Command                                                                     | Explanation               |
+| --------------------------------------------------------------------------- | ------------------------- |
+| `gh repo clone owner/repo`                                                  | Clone GitHub repo.        |
+| `gh pr create --base main --head feature-x --title "Feature" --body "Desc"` | Create PR from terminal.  |
+| `gh pr checkout 123`                                                        | Checkout PR #123 locally. |
+| `gh issue list`                                                             | List GitHub issues.       |
+| `gh release create v1.0.0 --notes "Release notes"`                          | Create GitHub release.    |
+
+---
+
+## 🔹 11. Collaboration & Code Review
+
+| Command                         | Explanation                              |
+| ------------------------------- | ---------------------------------------- |
+| `git fetch upstream main`       | Get updates from fork’s upstream.        |
+| `git merge upstream/main`       | Merge upstream changes.                  |
+| `git rebase upstream/main`      | Rebase feature branch onto updated main. |
+| `git diff origin/main..HEAD`    | Compare local vs remote.                 |
+| `git diff feature-x..feature-y` | Compare two branches.                    |
+
+---
+
+## 🔹 12. Debugging & Recovery
+
+| Command                    | Explanation                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `git bisect start`         | Start binary search for bug.                         |
+| `git bisect bad`           | Mark current commit as bad.                          |
+| `git bisect good <commit>` | Mark commit as good → Git auto-navigates to culprit. |
+| `git reflog`               | Recover from mistakes (lost commits/branches).       |
+| `git fsck --lost-found`    | Find dangling commits/objects.                       |
+
+---
+
+## 🔹 13. Submodules & Monorepos
+
+| Command                                   | Explanation                                |
+| ----------------------------------------- | ------------------------------------------ |
+| `git submodule add <repo-url>`            | Add submodule (external repo inside repo). |
+| `git submodule update --init --recursive` | Initialize and update submodules.          |
+| `git submodule sync`                      | Sync submodule URLs.                       |
+
+---
+
+## 🔹 14. Performance & Large Repos
+
+| Command                         | Explanation                               |
+| ------------------------------- | ----------------------------------------- |
+| `git gc`                        | Garbage collection (optimize repo).       |
+| `git fsck`                      | Integrity check.                          |
+| `git sparse-checkout init`      | Enable sparse checkout (large monorepos). |
+| `git sparse-checkout set <dir>` | Checkout only specific directories.       |
+
+---
+
+## 🔹 15. Useful One-Liners
+
+* Undo last commit but keep changes:
+
+  ```bash
+  git reset --soft HEAD~1
+  ```
+
+* Delete all merged local branches except main:
+
+  ```bash
+  git branch --merged | egrep -v "(^\*|main)" | xargs git branch -d
+  ```
+
+* See which branches contain a commit:
+
+  ```bash
+  git branch --contains <commit>
+  ```
+
+---
+

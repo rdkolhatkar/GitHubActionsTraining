@@ -1,0 +1,151 @@
+---
+
+# 🔀 Git Commands for Resolving Merge Conflicts
+
+---
+
+## 🔹 1. Detecting Merge Conflicts
+
+Conflicts usually happen during:
+
+* `git merge <branch>`
+* `git rebase <branch>`
+* `git cherry-pick <commit>`
+* `git pull`
+
+Git will pause and show messages like:
+
+```
+CONFLICT (content): Merge conflict in <file>
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+---
+
+## 🔹 2. Checking Conflict Status
+
+| Command           | Explanation                                                           |
+| ----------------- | --------------------------------------------------------------------- |
+| `git status`      | Shows which files are conflicted.                                     |
+| `git diff`        | Shows conflict markers (`<<<<<<< HEAD`, `=======`, `>>>>>>> branch`). |
+| `git log --merge` | Show commits causing the conflict.                                    |
+
+---
+
+## 🔹 3. Resolving Conflicts Manually
+
+When you open a conflicted file, you’ll see:
+
+```text
+<<<<<<< HEAD
+your changes
+=======
+incoming changes
+>>>>>>> branch-name
+```
+
+### Options:
+
+* Keep **your changes**
+* Keep **incoming changes**
+* Keep **both changes** (merge manually)
+* Modify as needed
+
+After fixing, mark file as resolved:
+
+```bash
+git add <file>
+```
+
+---
+
+## 🔹 4. Continuing After Conflict Resolution
+
+| Command                      | When to Use                            |
+| ---------------------------- | -------------------------------------- |
+| `git merge --continue`       | After fixing conflicts in a merge.     |
+| `git rebase --continue`      | After fixing conflicts during rebase.  |
+| `git cherry-pick --continue` | After fixing conflicts in cherry-pick. |
+
+If you decide to stop:
+
+```bash
+git merge --abort       # cancel merge
+git rebase --abort      # cancel rebase
+git cherry-pick --abort # cancel cherry-pick
+```
+
+---
+
+## 🔹 5. Using Conflict Resolution Tools
+
+Git provides built-in tools & external integrations:
+
+| Command                                 | Explanation                                                |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `git mergetool`                         | Launch configured merge tool (e.g., VSCode, Meld, KDiff3). |
+| `git config --global merge.tool vscode` | Set VSCode as default mergetool.                           |
+| `git mergetool --tool-help`             | List available merge tools.                                |
+
+Example for VS Code:
+
+```bash
+git config --global merge.tool vscode
+git config --global mergetool.vscode.cmd "code --wait $MERGED"
+```
+
+---
+
+## 🔹 6. Advanced Conflict Handling
+
+| Command                                | Explanation                                                          |
+| -------------------------------------- | -------------------------------------------------------------------- |
+| `git checkout --ours <file>`           | Accept **your version** of file.                                     |
+| `git checkout --theirs <file>`         | Accept **incoming version** of file.                                 |
+| `git restore --ours <file>`            | (New syntax) Keep your side.                                         |
+| `git restore --theirs <file>`          | (New syntax) Keep other side.                                        |
+| `git diff --name-only --diff-filter=U` | List only unresolved files.                                          |
+| `git rerere enabled`                   | Enable reuse recorded resolutions (auto-resolve repeated conflicts). |
+
+---
+
+## 🔹 7. Finalizing Merge
+
+Once conflicts are resolved and staged:
+
+```bash
+git commit    # completes the merge
+```
+
+If continuing a rebase:
+
+```bash
+git rebase --continue
+```
+
+---
+
+## 🔹 8. Best Practices for Conflict Resolution
+
+* Run `git fetch --all` before starting merges.
+* Rebase frequently on top of `main`/`develop` to reduce conflicts.
+* Use `git log --oneline --graph --decorate --all` to understand history before resolving.
+* Consider `git rerere` if working with long-lived branches (saves conflict resolutions).
+
+---
+
+⚡ So, in short the **essential commands** you’ll use when resolving conflicts are:
+
+```bash
+git status
+git diff
+git checkout --ours <file>
+git checkout --theirs <file>
+git add <file>
+git merge --continue
+git rebase --continue
+git cherry-pick --continue
+git merge --abort / git rebase --abort
+```
+
+---

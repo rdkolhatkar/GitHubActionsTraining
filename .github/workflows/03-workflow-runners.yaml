@@ -1,0 +1,56 @@
+# -------------------------------
+# Workflow metadata
+# -------------------------------
+
+# The name of the workflow. This is what you will see in the GitHub Actions tab.
+name: 03 - Workflow Runners
+
+# The event that triggers this workflow.
+# Here, the workflow will run every time someone pushes commits to the repository.
+on: push
+
+# -------------------------------
+# Jobs section
+# -------------------------------
+
+jobs:   # Defines the set of jobs that will be executed in this workflow.
+
+    # ---------------------------
+    # Job 1: ubuntu-echo
+    # ---------------------------
+    ubuntu-echo:     # The unique identifier (ID) of the job.
+        runs-on: ubuntu-latest   # Specifies the type of runner (machine) to run this job on.
+                                 # "ubuntu-latest" means GitHub will provide the latest Ubuntu VM.
+
+        steps:   # A list of steps (sequential commands) that will run inside this job.
+            - name: Show OS   # A human-friendly name for this step (appears in the Actions logs).
+              run: |          # The command(s) to run. The pipe (|) allows multiple lines of shell script.
+                echo "This job is running on Ubuntu runner."   # Prints a custom message to the console.
+                echo "Runner OS: $RUNNER_OS"                   # Prints the environment variable $RUNNER_OS,
+                                                               # which GitHub sets to the runner’s OS name.
+
+    # ---------------------------
+    # Job 2: windows-echo
+    # ---------------------------
+    windows-echo:    # The unique identifier (ID) of the job.
+        runs-on: windows-latest  # Runs this job on the latest Windows Server VM provided by GitHub.
+
+        steps:
+            - name: Show OS      # Step name that will appear in the Actions UI.
+              shell: bash        # Explicitly tells GitHub to run this step using bash instead of
+                                 # the default Windows PowerShell.
+              run: |             # Command(s) to run.
+                echo "This job is running on Windows runner."  # Prints a message.
+                echo "Runner OS: $RUNNER_OS"                   # Prints the runner OS value.
+
+    # ---------------------------
+    # Job 3: macos-echo
+    # ---------------------------
+    macos-echo:     # The unique identifier (ID) of the job.
+        runs-on: macos-latest    # Runs this job on the latest macOS VM provided by GitHub.
+
+        steps:
+            - name: Show OS      # Step name that will be shown in the logs.
+              run: |             # Command(s) to run using the default shell (bash on macOS).
+                echo "This job is running on macOS runner."   # Prints a message.
+                echo "Runner OS: $RUNNER_OS"                  # Prints the runner OS value.
