@@ -1,10 +1,41 @@
-name: 04 - Using Actions
+# Name of this workflow
+name: 04 - Using Actions  
 
-on: push
+# Trigger for the workflow
+# workflow_dispatch allows manual trigger from GitHub UI
+on: workflow_dispatch  
 
+# Define jobs that run in this workflow
 jobs:
-    build:
-        runs-on: ubuntu-latest
+    build:  # Name of the job
+        runs-on: ubuntu-latest  # The VM environment on which the job runs
+        defaults:  # Default settings for all 'run' steps in this job
+            run:
+                shell: bash  # Use bash shell for commands
+                working-directory: 04-using-actions/react-app  # Set working directory for commands
 
-        # 1. Install Dependencies of our react application
-        # 2. Execute automated tests
+        # Steps define the sequence of tasks executed in this job
+        steps:
+            # Step 0: Checkout the repository code
+            - name: Checkout code
+              uses: actions/checkout@v4  # Official action to clone the GitHub repository
+
+            # Step 0b: List files in the working directory for verification
+            - name: Printing Files
+              run: ls -la  # List all files with details (long format including hidden files)
+
+            # Step 1a: Setup Node.js environment
+            - name: Setup Node.js
+              uses: actions/setup-node@v3  # Official action to install Node.js
+              with:
+                  node-version: '20.x'  # Specify Node.js version 20
+
+            # Step 1b: Install project dependencies
+            - name: Install Dependencies
+              run: |
+                npm ci  # Clean install of all dependencies using package-lock.json (preferred for CI)
+
+            # Step 2: Run automated tests
+            - name: Run Unit Tests
+              run: |
+                npm test -- --watchAll=false  # Execute unit tests once without watching files
