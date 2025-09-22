@@ -1,0 +1,34 @@
+# -------------------------------
+# Workflow name
+# This is the display name of the GitHub Actions workflow.
+# It helps you identify the workflow in the "Actions" tab.
+name: 05 - Filters and Activity Types Two
+
+# -------------------------------
+# Trigger section: Defines WHEN this workflow should run.
+on:
+    # This workflow is triggered by pull request events.
+    pull_request:
+        # "types" filters which pull request actions should trigger the workflow.
+        # In this case, only the "closed" action will trigger it.
+        types:
+            - closed        # Runs when a PR is closed (merged or simply closed without merging).
+
+        # "branches" filters which base branch the pull request must target.
+        branches:
+            - main          # The workflow runs only if the pull request’s base branch is "main".
+
+# -------------------------------
+# Jobs section: Defines the tasks to be executed when the trigger conditions are met.
+jobs:
+    # Job name (an identifier you choose). Here it's "echo".
+    echo:
+        # The environment (runner) where the job will execute.
+        # "ubuntu-latest" means GitHub will spin up a fresh Ubuntu VM to run this job.
+        runs-on: ubuntu-latest
+
+        # Steps define the sequence of actions inside the job.
+        steps:
+            # A simple step to execute a shell command.
+            - run: echo "Running when a pull request is closed AND base branch is main"
+              # This prints the given message into the workflow logs.

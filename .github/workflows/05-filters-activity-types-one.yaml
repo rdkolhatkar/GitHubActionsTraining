@@ -1,0 +1,33 @@
+# -------------------------------
+# Workflow name
+# This is just a label for your GitHub Actions workflow. 
+# It will show up in the "Actions" tab of your repository.
+name: 05 - Filters and Activity Types One 
+
+# -------------------------------
+# Trigger section: When should this workflow run?
+on:
+    # This workflow will run on pull request events
+    pull_request:
+        # The specific activity types of pull requests we care about
+        types:
+            - opened        # Runs when a new PR is created
+            - synchronize   # Runs when commits are pushed to an already open PR
+
+        # Only run the workflow if the pull request's base branch is "main"
+        branches:
+            - main    
+
+# -------------------------------
+# Jobs section: Defines what tasks (jobs) should run when triggered
+jobs:
+    # "echo" is the job name (you can give any identifier)
+    echo:
+        # Runner environment: workflow will run inside a GitHub-hosted VM with Ubuntu OS
+        runs-on: ubuntu-latest
+
+        # Steps inside this job (executed sequentially)
+        steps:
+            # A single step to run a shell command
+            - run: echo "Running when a pull request is opened or synchronized AND base branch is main"
+              # This prints a message to the workflow logs

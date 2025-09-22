@@ -7,7 +7,8 @@ name: 03 - Workflow Runners
 
 # The event that triggers this workflow.
 # Here, the workflow will run every time someone pushes commits to the repository.
-on: push
+# on: push
+on: workflow_dispatch  # This allows manual triggering of the workflow from the GitHub UI.
 
 # -------------------------------
 # Jobs section
