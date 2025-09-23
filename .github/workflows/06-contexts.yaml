@@ -1,0 +1,145 @@
+# ---------------------------
+# Workflow Metadata
+# ---------------------------
+
+name: 06 - Contexts
+# "name" specifies the display name of this workflow in the GitHub Actions UI.
+# It helps to identify workflows in the Actions tab of a repository.
+# Here, it is named "06 - Contexts" (maybe as part of a tutorial series).
+
+run-name: 06 - Contexts | DEBUG - ${{ inputs.debug }}
+# "run-name" sets the name for a specific workflow run (execution instance).
+# It can use expressions with GitHub contexts.
+# Here, it includes a dynamic value: the input 'debug'.
+# Example: "06 - Contexts | DEBUG - true" if debug is enabled.
+
+# ---------------------------
+# Workflow Triggers
+# ---------------------------
+
+on:
+  push:
+    # This workflow will run when code is pushed to the repository (any branch by default).
+
+  workflow_dispatch:
+    # "workflow_dispatch" allows manual triggering of this workflow from the GitHub Actions UI.
+    inputs:
+      debug:
+        type: boolean
+        default: false
+        description: 'Enable debug mode'
+        # "inputs" let you define parameters for manual runs.
+        # Here, a "debug" boolean input is defined:
+        # - type: boolean (true/false)
+        # - default: false
+        # - description: user-facing help text.
+
+# ---------------------------
+# Global Environment Variables
+# ---------------------------
+
+env:
+  MY_WORKFLOW_VAR: "workflow"
+  # Workflow-level variable, available in all jobs and steps unless overridden.
+  
+  MY_OVERWRIDDEN_VAR: "workflow"
+  # Another workflow-level variable. This will be overridden later at job/step level.
+
+# ---------------------------
+# Job Definitions
+# ---------------------------
+
+jobs:
+  # Each "job" is a set of steps that run in a separate runner (VM/container).
+  # Jobs run in parallel by default unless dependencies are defined.
+
+  echo-data:
+    runs-on: ubuntu-latest
+    # "runs-on" specifies the type of virtual machine (runner) to use.
+    # "ubuntu-latest" is a GitHub-hosted Linux runner with preinstalled tools.
+
+    env:
+      MY_JOB_VAR: "job"
+      # Job-level environment variable (available in all steps of this job).
+      
+      MY_OVERWRIDDEN_VAR: "job"
+      # Overrides the workflow-level variable for this job.
+
+    steps:
+      # Steps are the sequence of tasks within a job.
+      # Each step can run commands or use actions.
+
+      - name: Display information
+        run: |
+          # "run" executes shell commands inside the runner.
+          # "${{ github.* }}" refers to GitHub context values (built-in variables).
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+        # These are GitHub-provided contexts:
+        # - github.event_name : Triggering event (push, workflow_dispatch, etc.)
+        # - github.ref : Branch or tag reference
+        # - github.sha : Commit SHA that triggered the run
+        # - github.repository : repo name (owner/repo)
+        # - github.actor : who triggered the run
+        # - github.workflow : workflow name
+        # - github.job : current job ID
+        # - github.run_id : unique ID for this run
+        # - github.run_number : incremental run number
+
+      - name: Retreive Variable
+        run: |
+          echo "My Variable Value: ${{ vars.MY_VAR }}"
+        # "vars" refers to repository/environment variables defined in GitHub repo settings.
+        # This retrieves "MY_VAR" set under Settings → Secrets and Variables → Variables.
+
+      - name: Print Environment Variables
+        env:
+          MY_STEP_VAR: "step"
+          MY_OVERWRIDDEN_VAR: "step" 
+          # Step-level env variables override job/workflow ones.
+          # Precedence: Step > Job > Workflow
+        run: |
+          echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
+          echo "Overridden env: ${{ env.MY_OVERWRIDDEN_VAR }}"
+        # Will print:
+        # - MY_WORKFLOW_VAR from workflow
+        # - MY_OVERWRIDDEN_VAR = "step" (highest precedence)
+
+      - name: Print All Environment Variables
+        run: printenv
+        # "printenv" dumps all environment variables in the runner.
+        # Useful for debugging; you’ll see MY_WORKFLOW_VAR, MY_JOB_VAR, MY_STEP_VAR, etc.
+
+      - name: Retreive environment variable
+        run: |
+          echo "My Job Variable Value: $MY_JOB_VAR"
+          echo "My Workflow Variable Value: $MY_WORKFLOW_VAR"
+          echo "My Step Variable Value: $MY_STEP_VAR"
+          echo "My Overridden Variable Value: $MY_OVERWRIDDEN_VAR"
+        # Accessing env vars directly via shell syntax: $VAR_NAME
+
+        # The following comments are instructions to create a repository variable:
+        # 1. Open repo settings → Secrets and Variables → Variables
+        # 2. Click "New repository variable"
+        # 3. Add MY_VAR with some value
+        # 4. Then it can be retrieved using ${{ vars.MY_VAR }} above
+
+  echo-data-two:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print Environment Variables
+        run: |
+          echo "Workflow env: $env.MY_WORKFLOW_VAR"
+          echo "Overridden env: $env.MY_OVERWRIDDEN_VAR"
+        # Notice: here PowerShell syntax ($env.VAR) is used instead of Bash.
+        # Default shell depends on runner OS:
+        # - ubuntu-latest: bash
+        # - windows-latest: PowerShell
+        # - macos-latest: bash/zsh
