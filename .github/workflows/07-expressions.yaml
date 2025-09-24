@@ -1,0 +1,62 @@
+# Top-level workflow display name
+name: 07 - Using Expressions
+
+# The "run-name" becomes the display name for each workflow run.
+# It contains a GitHub Actions expression inside ${{ }} that evaluates to either 'ON' or 'OFF'
+# depending on the "debug" input value provided at workflow_dispatch time.
+run-name: Using Expressions | DEBUG - ${{ inputs.debug && 'ON' || 'OFF' }}
+
+# Top-level environment variables (applies to all jobs & steps unless overridden)
+env:
+  # Set MY_VAR_WITH_DEFAULT to repository variable vars.MY_VAR if it exists/truthy,
+  # otherwise fallback to the string 'default_value'.
+  # This uses the GitHub Actions expression language (not plain YAML).
+  MY_VAR_WITH_DEFAULT: ${{ vars.MY_VAR || 'default_value'}}  
+
+# Triggers for the workflow
+on: 
+  # Run on pushes to any branch (no additional config given)
+  push:
+  # Also allow manual runs (button in Actions UI) with inputs
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Enable debug mode'  # Shown in UI when manually triggering
+        default: false                    # default is boolean false
+        type: boolean                     # declares this input as boolean
+
+# Jobs block: one or more jobs that run in parallel (unless depends on others)
+jobs:
+  echo:
+    # Runner image for this job
+    runs-on: ubuntu-latest
+
+    # Steps are executed in sequence on the chosen runner
+    steps:
+      - name: '[debug] Print start-up'
+        # 'if' is a conditional that determines whether this step runs.
+        # Here it's written without ${{}} — GitHub evaluates it as an expression.
+        if: inputs.debug == true     
+        run: |    # '|' starts a literal block scalar (preserve newlines). This is a shell script.      
+          echo "Debug mode is enabled"          
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Triggered by: ${{github.event_name}}"
+          echo "Branch: ${{github.ref}}"
+          echo "Repository: ${{github.repository}}"
+          echo "Actor: ${{github.actor}}"
+          echo "Commit SHA: ${{github.sha}}
+    # Expression inside ${{ }} is resolved by GitHub before the runner script runs.
+
+      - name: '[debug] Print When Triggered from main'
+        # Here the 'if' *is* wrapped in ${{ }}, combining two conditions:
+        #  - inputs.debug must be truthy
+        #  - the ref must equal the main branch ref string
+        if: ${{ inputs.debug && github.ref == 'refs/heads/main'}}
+        run: |
+          echo "This job was triggered from the main branch"
+
+      - name: 'Print Greeting'
+        run: |    
+          echo "Hello, ${{ github.actor }}! Welcome to the Expressions demo."
+        # This uses a GitHub expression inside the run script to print the actor.
+        # Note: this expansion happens BEFORE the shell runs.
