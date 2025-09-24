@@ -16,7 +16,7 @@ env:
 # Triggers for the workflow
 on: 
   # Run on pushes to any branch (no additional config given)
-  push:
+  # push:
   # Also allow manual runs (button in Actions UI) with inputs
   workflow_dispatch:
     inputs:
